@@ -46,18 +46,15 @@ function domainCheck(domain, inIncognitoContext) {
 				domainsDetecting.splice(domainsDetecting.indexOf(domain), 1);
 			}
 		};
-		// Timeout disabled and xhr set to async, since timeout isn't working (TODO: fix it)
-		// Awaiting Chromium issue 105656: https://code.google.com/p/chromium/issues/detail?id=105656
-		//xhr.timeout = 1000; // We wanna have a short timeout to avoid hanging the browser too long
-		//var timer = setTimeout(function(xhr) { xhr.abort(); }, 1000, xhr);
-		xhr.open('GET', 'https://'+domain+'/', true);
+		var timer = setTimeout(function(xhr) { xhr.abort(); }, 1000, xhr);
+		xhr.open('GET', 'https://'+domain+'/', false);
 		try {
 			xhr.send(null);
 		} catch (e) {
 			domainChange(domain, 2);
 			domainsDetecting.splice(domainsDetecting.indexOf(domain), 1);
 		}
-		//if(typeof(timer)!='undefined') clearTimeout(timer);
+		if(typeof(timer)!='undefined') clearTimeout(timer);
 	}
 	
 	return ssl;
